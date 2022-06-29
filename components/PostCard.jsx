@@ -3,7 +3,7 @@ import Link from 'next/link';
 import moment from 'moment';
 
 const PostCard = ({ post }) => {
-  console.log(post)
+  // console.log(post)
   return (
     <div>
       <div className="bg-white shadow-lg rounded-lg p-0 lg:p-8 pb-12 mb-8">

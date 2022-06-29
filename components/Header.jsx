@@ -1,10 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-
-const categories = [{ name: 'react', slug: 'react' }, { name: 'web dev', slug: 'web-dev' }]
-
+import { fetchCategories } from '../graphQL';
 
 const Header = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetchCategories()
+      .then(data => setCategories(data))
+  }, [])
+
+
 
   return (
     <div className='container flex justify-between items-center mx-auto  mb-8 w-full border-b border-blue-400 py-8'>
