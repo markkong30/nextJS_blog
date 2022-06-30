@@ -13,6 +13,7 @@ const CommentsForm = ({ slug }) => {
   const [error, setError] = useState(false);
   const [localStorage, setLocalStorage] = useState(null);
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
   const [formData, setFormData] = useState({});
   const form = useRef(null)
 
@@ -20,8 +21,8 @@ const CommentsForm = ({ slug }) => {
     const name = window.localStorage.getItem('name');
     const email = window.localStorage.getItem('email');
 
-    form.current.querySelector('.name').value = name;
-    form.current.querySelector('.email').value = email;
+    setFormData({ ...formData, name, email })
+
   }, [])
 
 
@@ -40,8 +41,8 @@ const CommentsForm = ({ slug }) => {
       window.localStorage.setItem('name', name);
       window.localStorage.setItem('email', email);
     } else {
-      window.localStorage.removeItem('name', name);
-      window.localStorage.removeItem('email', email);
+      window.localStorage.removeItem('name');
+      window.localStorage.removeItem('email');
     }
 
     submitComment({ ...formData, slug })
@@ -65,19 +66,19 @@ const CommentsForm = ({ slug }) => {
               )
             case 'input':
               return (
-                <input key={i} className={field.class} name={field.name} placeholder={field.placeholder} onChange={e => setFormData({ ...formData, [e.target.name]: e.target.value })} />
+                <input key={i} className={field.class} name={field.name} value={formData[field.name] || ''} placeholder={field.placeholder} onChange={e => setFormData({ ...formData, [e.target.name]: e.target.value })} />
               )
           }
         })}
         <div className="col-span-2 mt-4">
-          <input type="checkbox" id="storeData" name="storeData" value="true" />
+          <input type="checkbox" id="storeData" name="storeData" value="true" defaultChecked={isChecked} onChange={() => setIsChecked(!isChecked)} />
           <label htmlFor="storeData" className='ml-2 text-gray-500 cursor-pointer'>Save my name and email for next time</label>
         </div>
         {error && <p className='text-xs text-red-500'>All fields are required!</p>}
         <div className="mt-8">
           <button type="submit" className="transition duration-500 ease hover:bg-indigo-600 inline-block bg-pink-600 text-lg font-medium rounded-full text-white px-8 py-3 cursor-pointer">Post Comment</button>
         </div>
-        {showSuccessMsg && <span className="text-xl float-right font-semibold mt-3 text-green-500">Comment submitted for review</span>}
+        {showSuccessMsg && <span className="float-right font-semibold mt-3 text-green-500">Comment submitted for review</span>}
       </form>
     </div>
   );
