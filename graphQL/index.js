@@ -133,6 +133,43 @@ export const fetchCategories = async () => {
 	return data.categories;
 };
 
+export const fetchCategoryPost = async (slug) => {
+	const query = gql`
+		query GetCategoryPost($slug: String!) {
+			postsConnection(where: { categories_some: { slug: $slug } }) {
+				edges {
+					cursor
+					node {
+						author {
+							bio
+							name
+							id
+							photo {
+								url
+							}
+						}
+						createdAt
+						slug
+						title
+						excerpt
+						featuredImage {
+							url
+						}
+						categories {
+							name
+							slug
+						}
+					}
+				}
+			}
+		}
+	`;
+
+	const data = await request(graphqlAPI, query, { slug });
+
+	return data.postsConnection.edges;
+};
+
 export const submitComment = async (obj) => {
 	const result = await fetch("/api/comments", {
 		method: "POST",
@@ -140,6 +177,18 @@ export const submitComment = async (obj) => {
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify(obj),
+	});
+
+	return result.json();
+};
+
+export const publishComment = async (id) => {
+	const result = await fetch("/api/publishComment", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(id),
 	});
 
 	return result.json();

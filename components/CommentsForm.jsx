@@ -1,6 +1,6 @@
 import { comment } from 'postcss';
 import React, { useEffect, useState, useRef } from 'react';
-import { submitComment } from '../graphQL';
+import { submitComment, publishComment } from '../graphQL';
 
 
 const fields = [
@@ -23,8 +23,7 @@ const CommentsForm = ({ slug }) => {
 
     setFormData({ ...formData, name, email })
 
-  }, [])
-
+  }, []);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -47,10 +46,12 @@ const CommentsForm = ({ slug }) => {
 
     submitComment({ ...formData, slug })
       .then(res => {
+        publishComment({ id: res.createComment.id })
         setShowSuccessMsg(true);
         setTimeout(() => {
           setShowSuccessMsg(false);
-        }, 3000)
+          window.location.reload();
+        }, 2000)
       })
   }
 
